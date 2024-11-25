@@ -48,8 +48,17 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "서버 에러" });
   }
 };
-export const login = (req, res) => {
-  res.send("login route");
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "정보를 가져올 수 없습니다. 다시 확인해주세요." });
+    }
+  } catch (error) {}
 };
 export const logout = (req, res) => {
   res.send("logout route");
