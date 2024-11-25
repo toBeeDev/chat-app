@@ -1,6 +1,7 @@
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
   console.log(req.body);
@@ -84,4 +85,15 @@ export const logout = (req, res) => {
   }
 };
 
-export const updateProfile = async (req, res) => {};
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic } = req.body;
+    const userId = req.user_id;
+
+    if (!profilePic) {
+      return res.status(400).json({ message: "프로필 사진은 필수입니다." });
+    }
+
+    const uploadRes = await cloudinary.uploader.upload(profilePic);
+  } catch (error) {}
+};
