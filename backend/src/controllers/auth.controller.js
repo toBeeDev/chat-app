@@ -54,11 +54,24 @@ export const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: "정보를 가져올 수 없습니다. 다시 확인해주세요." });
+      return res.status(400).json({ message: "정보를 찾을 수 없습니다." });
     }
-  } catch (error) {}
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      res.status(400).json({ message: "정보를 찾을 수 없습니다." });
+    }
+
+    generateToken(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.log("로그인에 실패하였습니다.", error.message);
+  }
 };
 export const logout = (req, res) => {
   res.send("logout route");
