@@ -75,5 +75,11 @@ export const login = async (req, res) => {
   }
 };
 export const logout = (req, res) => {
-  res.send("logout route");
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "로그아웃 성공" });
+  } catch (error) {
+    console.log("로그아웃에 실패하였습니다.", error.message);
+    res.status(500).json({ message: "서버 에러" });
+  }
 };
