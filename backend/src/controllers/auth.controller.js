@@ -83,3 +83,5 @@ export const logout = (req, res) => {
     res.status(500).json({ message: "서버 에러" });
   }
 };
+
+export const updateProfile = async (req, res) => {};
