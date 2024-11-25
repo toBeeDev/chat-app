@@ -95,5 +95,16 @@ export const updateProfile = async (req, res) => {
     }
 
     const uploadRes = await cloudinary.uploader.upload(profilePic);
-  } catch (error) {}
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profilePic: uploadRes.secure_url,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log("프로필 수정에 실패하였습니다.", error.message);
+    res.status(500).json({ message: "서버 에러" });
+  }
 };
