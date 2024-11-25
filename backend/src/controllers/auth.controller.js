@@ -71,6 +71,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log("로그인에 실패하였습니다.", error.message);
+    res.status(500).json({ message: "서버 에러" });
   }
 };
 export const logout = (req, res) => {
