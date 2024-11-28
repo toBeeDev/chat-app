@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Eye, EyeOff, Lock, Mail, MessageSquare, User } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  MessageSquare,
+  User,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 const SignUpPage = () => {
   const { signup, isSigningUp } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
@@ -102,7 +111,30 @@ const SignUpPage = () => {
                 </button>
               </div>
             </div>
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={isSigningUp}
+            >
+              {isSigningUp ? (
+                <>
+                  <Loader2 className="size-5 animate-spin" />
+                  로딩 중...
+                </>
+              ) : (
+                "회원가입하기"
+              )}
+            </button>
           </form>
+
+          <div className="text-center">
+            <p className="text-base-content/60">
+              이미 계정이 있으신가요?{" "}
+              <Link to={"/login"} className="link link-primary">
+                로그인
+              </Link>{" "}
+            </p>
+          </div>
         </div>
       </div>
     </div>
