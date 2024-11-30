@@ -10,6 +10,8 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import AuthImagePattern from "../components/AuthImagePattern";
+
 const SignUpPage = () => {
   const { signup, isSigningUp } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
@@ -137,6 +139,9 @@ const SignUpPage = () => {
           </div>
         </div>
       </div>
+
+      {/* 우측 */}
+      <AuthImagePattern />
     </div>
   );
 };
