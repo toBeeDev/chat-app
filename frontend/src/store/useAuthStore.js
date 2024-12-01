@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { axios } from "../lib/axios";
+import toast from "react-hot-toast";
 
 export const useAuthStore = create((set) => ({
   authUser: null,
@@ -20,5 +21,26 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  signup: async (data) => {},
+  signup: async (data) => {
+    set({ isSigningUp: true });
+    try {
+      const res = await axios.post("/auth/signup", data);
+      set({ authUser: res.data });
+      toast.success("회원가입 완료");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isSigningUp: false });
+    }
+  },
+
+  logout: async () => {
+    try {
+      await axios.post("/auth/logout");
+      set({ authUser: null });
+      toast.success("로그아웃 완료");
+    } catch (error) {
+      toast.error(error.reponse.data.message);
+    }
+  },
 }));
