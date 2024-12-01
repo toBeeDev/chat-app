@@ -10,6 +10,7 @@ import {
   User,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import AuthImagePattern from "../components/AuthImagePattern";
 
 const SignUpPage = () => {
@@ -21,11 +22,27 @@ const SignUpPage = () => {
     password: "",
   });
 
-  const validateForm = () => {};
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const validateForm = () => {
+    if (!formData.fullName.trim()) return toast.error("이름을 입력해주세요");
+    if (!formData.email.trim()) return toast.error("이메일을 입력해주세요");
+    if (!emailRegex.test(formData.email))
+      return toast.error("유효하지 않은 이메일입니다");
+    if (!formData.password.trim())
+      return toast.error("비밀번호를 입력해주세요");
+    if (!formData.password.length > 6)
+      return toast.error("비밀번호 6자리 이상 입력해주세요");
+
+    return true;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const success = validateForm();
+    if (success) signup(formData);
   };
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
