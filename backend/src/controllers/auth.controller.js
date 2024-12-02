@@ -4,22 +4,21 @@ import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
-  console.log(req.body);
   const { fullName, email, password } = req.body;
   try {
     if (!fullName || !email || !password) {
-      return res.status(400).json({ message: "누락된 필드가 존재합니다." });
+      return res.status(400).json({ message: "All fields are required" });
     }
-    //token 발급로직
-    //hash password
+
     if (password.length < 6) {
       return res
         .status(400)
-        .json({ message: "비밀번호는 최소 6자리여야 합니다." });
+        .json({ message: "Password must be at least 6 characters" });
     }
+
     const user = await User.findOne({ email });
-    if (user)
-      return res.status(400).json({ message: "이미 존재하는 이메일입니다." });
+
+    if (user) return res.status(400).json({ message: "Email already exists" });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -31,7 +30,7 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
-      //jwt 토큰 생성
+      // generate jwt token here
       generateToken(newUser._id, res);
       await newUser.save();
 
@@ -42,10 +41,10 @@ export const signup = async (req, res) => {
         profilePic: newUser.profilePic,
       });
     } else {
-      res.status(400).json({ message: "올바르지 않은 접근입니다." });
+      res.status(400).json({ message: "Invalid user data" });
     }
   } catch (error) {
-    console.log("회원가입 컨트롤러 오류", error.message);
+    console.log("Error in signup controller", error.message);
     res.status(500).json({ message: "서버 에러" });
   }
 };
@@ -54,12 +53,14 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(400).json({ message: "정보를 찾을 수 없습니다." });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      res.status(400).json({ message: "정보를 찾을 수 없습니다." });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     generateToken(user._id, res);
@@ -71,16 +72,17 @@ export const login = async (req, res) => {
       profilePic: user.profilePic,
     });
   } catch (error) {
-    console.log("로그인에 실패하였습니다.", error.message);
+    console.log("Error in login controller", error.message);
     res.status(500).json({ message: "서버 에러" });
   }
 };
+
 export const logout = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
-    res.status(200).json({ message: "로그아웃 성공" });
+    res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.log("로그아웃에 실패하였습니다.", error.message);
+    console.log("Error in logout controller", error.message);
     res.status(500).json({ message: "서버 에러" });
   }
 };
@@ -88,32 +90,31 @@ export const logout = (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { profilePic } = req.body;
-    const userId = req.user_id;
+    const userId = req.user._id;
 
     if (!profilePic) {
-      return res.status(400).json({ message: "프로필 사진은 필수입니다." });
+      return res.status(400).json({ message: "Profile pic is required" });
     }
 
-    const uploadRes = await cloudinary.uploader.upload(profilePic);
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      {
-        profilePic: uploadRes.secure_url,
-      },
+      { profilePic: uploadResponse.secure_url },
       { new: true }
     );
+
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("프로필 수정에 실패하였습니다.", error.message);
+    console.log("error in update profile:", error);
     res.status(500).json({ message: "서버 에러" });
   }
 };
 
-export const checkAuth = async (req, res) => {
+export const checkAuth = (req, res) => {
   try {
     res.status(200).json(req.user);
   } catch (error) {
-    console.log("인증여부 확인에 실패하였습니다.", error.message);
+    console.log("Error in checkAuth controller", error.message);
     res.status(500).json({ message: "서버 에러" });
   }
 };
