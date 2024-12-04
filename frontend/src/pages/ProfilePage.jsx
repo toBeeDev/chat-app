@@ -100,7 +100,7 @@ const ProfilePage = () => {
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>계정상태</span>
-                <span className="text-green-500">Active</span>
+                <span className="text-green-500">활성</span>
               </div>
             </div>
           </div>
