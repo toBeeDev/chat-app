@@ -1,4 +1,7 @@
+import { useChatStore } from "../store/useChatStore";
+
 const HomePage = () => {
+  const { selectedUser } = useChatStore();
   return <div>HomePage</div>;
 };
 

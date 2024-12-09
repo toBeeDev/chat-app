@@ -15,7 +15,7 @@ export const useChatStore = create((set) => ({
       const res = axios.get("/messages/users");
       set({ users: res.data });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error);
     } finally {
       set({ isUsersLoading: false });
     }
