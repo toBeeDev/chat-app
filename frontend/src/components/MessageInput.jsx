@@ -11,7 +11,15 @@ const MessageInput = () => {
   const removeImage = () => {};
   const handleSendMessage = async (e) => {};
 
-  return <div>MessageInput</div>;
+  return (
+    <div className="p-4 w-full">
+      {imagePreview && (
+        <div className="mb-3 flex items-center gap-2">
+          <div className="relative"></div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default MessageInput;
