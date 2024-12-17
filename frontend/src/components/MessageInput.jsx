@@ -42,6 +42,13 @@ const MessageInput = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+          <input
+            type="file"
+            className="hidden"
+            ref={fileInputRef}
+            accept="image/*"
+            onChange={handleImageChange}
+          />
         </div>
       </form>
     </div>
