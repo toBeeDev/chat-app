@@ -57,9 +57,7 @@ const MessageInput = () => {
             }
             `}
             onClick={() => fileInputRef.current?.click()}
-          >
-            <Image size={20} />
-          </button>
+          ></button>
         </div>
       </form>
     </div>
