@@ -27,7 +27,22 @@ const MessageInput = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
-  const handleSendMessage = async (e) => {};
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!text.trim() && !imagePreview) return;
+    try {
+      await sendMessage({
+        text: text.trim(),
+        image: imagePreview,
+      });
+      //clear form
+      setText("");
+      setImagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (error) {
+      console.error("메시지 전송 실패", error);
+    }
+  };
 
   return (
     <div className="p-4 w-full">
