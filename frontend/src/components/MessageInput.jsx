@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { X, Image } from "lucide-react";
+import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 const MessageInput = () => {
@@ -12,35 +12,38 @@ const MessageInput = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file.type.startsWith("image/")) {
-      toast.error("이미지 파일을 선택해주세요");
+      toast.error("Please select an image file");
       return;
     }
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImagePreview(file);
+      setImagePreview(reader.result);
     };
-
     reader.readAsDataURL(file);
   };
+
   const removeImage = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
+
     try {
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
       });
-      //clear form
+
+      // Clear form
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
-      console.error("메시지 전송 실패", error);
+      console.error("Failed to send message:", error);
     }
   };
 
@@ -51,12 +54,13 @@ const MessageInput = () => {
           <div className="relative">
             <img
               src={imagePreview}
-              alt="미리보기"
+              alt="Preview"
               className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
             />
             <button
               onClick={removeImage}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300 flex items-center justify-center"
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
+              flex items-center justify-center"
               type="button"
             >
               <X className="size-3" />
@@ -70,32 +74,36 @@ const MessageInput = () => {
           <input
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
-            placeholder="메시지를 입력해주세요..."
+            placeholder="Type a message..."
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
           <input
             type="file"
+            accept="image/*"
             className="hidden"
             ref={fileInputRef}
-            accept="image/*"
             onChange={handleImageChange}
           />
 
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle ${
-              imagePreview ? "text-emerald-500" : "text-zinc-400"
-            }
-            `}
+            className={`hidden sm:flex btn btn-circle
+                     ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image size={20} />
           </button>
         </div>
+        <button
+          type="submit"
+          className="btn btn-sm btn-circle"
+          disabled={!text.trim() && !imagePreview}
+        >
+          <Send size={22} />
+        </button>
       </form>
     </div>
   );
 };
-
 export default MessageInput;
