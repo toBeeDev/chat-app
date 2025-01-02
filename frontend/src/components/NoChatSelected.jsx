@@ -17,7 +17,7 @@ const NoChatSelected = () => {
 
         <h2 className="text-2xl font-bold">Welcome to Chatty!</h2>
         <p className="text-base-content/60">
-          Select a conversation from the sidebar to start chatting
+          사이드바에서 대화를 선택하여 채팅을 시작하세요!
         </p>
       </div>
     </div>
