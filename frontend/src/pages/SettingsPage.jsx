@@ -89,7 +89,7 @@ const SettingsPage = () => {
                             }
                           `}
                       >
-                        12:00 PM
+                        12:00 AM
                       </p>
                     </div>
                   </div>
