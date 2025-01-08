@@ -156,7 +156,6 @@ const SignUpPage = () => {
         </div>
       </div>
 
-      {/* 우측 */}
       <AuthImagePattern
         title="지금 참여해보세요!"
         subtitle="하루하루 여러분들의 일상을 공유해봐요"
