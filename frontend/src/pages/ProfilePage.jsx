@@ -63,7 +63,7 @@ const ProfilePage = () => {
             <p className="text-sm text-zinc-400">
               {isUpdatingProfile
                 ? "업로드중..."
-                : "카메라 아이콘을 클릭하여 이미지 수정하기"}
+                : "카메라 아이콘 클릭 후 이미지 수정하기"}
             </p>
           </div>
 
