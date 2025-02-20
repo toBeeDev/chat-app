@@ -1,18 +1,21 @@
 import { create } from "zustand";
 import { axios } from "../lib/axios";
 import toast from "react-hot-toast";
-export const useAuthStore = create((set) => ({
+
+export const useAuthStore = create((set, get) => ({
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: true,
   onlineUsers: [],
+  socket: null,
 
   checkAuth: async () => {
     try {
       const res = await axios.get("/auth/check");
       set({ authUser: res.data });
+      get().connectSocket();
     } catch (error) {
       console.log("Error in checkAuth:", error);
       set({ authUser: null });
@@ -26,7 +29,8 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axios.post("/auth/signup", data);
       set({ authUser: res.data });
-      toast.success("Account created successfully");
+      toast.success("계정이 성공적으로 생성되었습니다.");
+      get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -39,7 +43,8 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axios.post("/auth/login", data);
       set({ authUser: res.data });
-      toast.success("Logged in successfully");
+      toast.success("로그인 성공");
+      get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -51,7 +56,8 @@ export const useAuthStore = create((set) => ({
     try {
       await axios.post("/auth/logout");
       set({ authUser: null });
-      toast.success("Logged out successfully");
+      toast.success("로그아웃 성공");
+      get().disconnectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -62,7 +68,7 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axios.put("/auth/update-profile", data);
       set({ authUser: res.data });
-      toast.success("Profile updated successfully");
+      toast.success("프로필이 성공적으로 업데이트되었습니다.");
     } catch (error) {
       console.log("error in update profile:", error);
       toast.error(error.response.data.message);
@@ -70,4 +76,6 @@ export const useAuthStore = create((set) => ({
       set({ isUpdatingProfile: false });
     }
   },
+  connectSocket: () => {},
+  disconnectSocket: () => {},
 }));
