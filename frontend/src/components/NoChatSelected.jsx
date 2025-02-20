@@ -15,7 +15,7 @@ const NoChatSelected = () => {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold">환영합니다 티티!</h2>
+        <h2 className="text-2xl font-bold">KiKi에 오신걸 환영합니다</h2>
         <p className="text-base-content/60">
           사이드바에서 대화를 선택하여 채팅을 시작하세요!
         </p>
