@@ -11,6 +11,7 @@ const io = new Server(server, {
   },
 });
 
+//소켓아이디 헬퍼함수
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
