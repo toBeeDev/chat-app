@@ -15,6 +15,7 @@ export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
 
+// 온라인 유저용
 const userSocketMap = {}; // {userId: socketId}
 
 io.on("connection", (socket) => {
